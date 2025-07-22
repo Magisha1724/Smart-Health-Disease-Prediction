@@ -1,0 +1,124 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+from sklearn.preprocessing import OneHotEncoder
+
+# Set visual style
+sns.set(style="whitegrid")
+
+# Updated dataset with symptoms as names
+data = {
+    'Symptoms': [
+        'Fever, Cough, Fatigue, Headache, Muscle_Aches, Sore_Throat, Shortness_of_Breath, Nausea',
+        'Fever, Cough, Fatigue, Sore_Throat',
+        'Fever, Cough, Fatigue, Shortness_of_Breath',
+        'Cough, Sore_Throat',
+        'Fever, Cough, Headache, Muscle_Aches',
+        'Fatigue, Cough, Sore_Throat',
+        'Fever, Fatigue, Muscle_Aches, Nausea',
+        'Fatigue, Shortness_of_Breath',
+        'Fever, Cough, Fatigue, Nausea',
+        'Cough, Headache, Sore_Throat'
+    ],
+    'Disease': [
+        'Flu', 'Cold', 'COVID-19', 'Strep Throat',
+        'Allergy', 'Pneumonia', 'Bronchitis',
+        'Sinusitis', 'Viral Infection', 'Laryngitis'
+    ]
+}
+
+# Convert to DataFrame
+df = pd.DataFrame(data)
+
+# Step 1: Data Cleaning
+missing_values = df.isnull().sum()
+print("Missing Values:\n", missing_values)
+
+print("\nCleaned DataFrame:\n", df)
+
+# Step 2: Data Integration (Assuming we have another similar dataset)
+data_additional = {
+    'Symptoms': [
+        'Fever, Cough, Fatigue, Headache',
+        'Fatigue, Sore_Throat, Nausea'
+    ],
+    'Disease': ['Flu', 'Allergy']
+}
+
+df_additional = pd.DataFrame(data_additional)
+df_combined = pd.concat([df, df_additional], ignore_index=True)
+
+print("\nCombined DataFrame:\n", df_combined)
+
+# Step 3: Data Transformation using One-Hot Encoding
+df_expanded = df_combined['Symptoms'].str.get_dummies(sep=', ').astype(int)
+df_expanded['Disease'] = df_combined['Disease']
+
+print("\nExpanded DataFrame:\n", df_expanded)
+
+# Visualize the distribution of diseases
+plt.figure(figsize=(10, 6))
+sns.countplot(data=df_expanded, x='Disease', palette='viridis')
+plt.title('Distribution of Diseases')
+plt.xlabel('Disease')
+plt.ylabel('Count')
+plt.xticks(rotation=45)
+plt.show()
+
+# Step 4: Data Reduction
+X = df_expanded.drop('Disease', axis=1)  # Symptom columns
+y = df_expanded['Disease']                 # Target column (Disease)
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+# Create the Naive Bayes model
+model = GaussianNB()
+
+# Train the model using the training data
+model.fit(X_train, y_train)
+
+# Make predictions
+y_pred = model.predict(X_test)
+
+# Evaluate the model
+accuracy = accuracy_score(y_test, y_pred)
+confusion = confusion_matrix(y_test, y_pred)
+report = classification_report(y_test, y_pred)
+
+print("\nModel Accuracy:", accuracy)
+print("\nConfusion Matrix:\n", confusion)
+print("\nClassification Report:\n", report)
+
+# Visualizing the Confusion Matrix
+plt.figure(figsize=(10, 6))
+sns.heatmap(confusion, annot=True, fmt='d', cmap='Blues', xticklabels=model.classes_, yticklabels=model.classes_)
+plt.title('Confusion Matrix')
+plt.xlabel('Predicted Disease')
+plt.ylabel('True Disease')
+plt.show()
+
+# Function to get user input for symptoms
+def get_user_input():
+    print("Please enter your symptoms separated by commas (e.g., Fever, Cough):")
+    symptoms_input = input("Symptoms: ")
+    symptoms_list = [symptom.strip() for symptom in symptoms_input.split(',')]
+    return symptoms_list
+
+# Function to predict disease based on user input
+def predict_disease():
+    symptoms_list = get_user_input()
+    user_input_df = pd.DataFrame(columns=X.columns)
+    for symptom in X.columns:
+        user_input_df[symptom] = [1 if symptom in symptoms_list else 0]
+    
+    predicted_disease = model.predict(user_input_df)
+   
+    print(f"\nBased on the symptoms provided, the predicted disease is: {predicted_disease[0]}")
+
+# Run the prediction
+predict_disease()
