@@ -1,0 +1,6 @@
+plt.figure(figsize=(10, 6))
+sns.heatmap(confusion, annot=True, fmt='d', cmap='Blues', xticklabels=model.classes_, yticklabels=model.classes_)
+plt.title('Confusion Matrix')
+plt.xlabel('Predicted Disease')
+plt.ylabel('True Disease')
+plt.show()
