@@ -1,0 +1,4 @@
+# One-Hot Encoding
+df_expanded = df_combined['Symptoms'].str.get_dummies(sep=', ').astype(int)
+df_expanded['Disease'] = df_combined['Disease']
+print("\nExpanded DataFrame:\n", df_expanded)
