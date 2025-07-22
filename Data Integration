@@ -1,0 +1,12 @@
+# Adding an additional dataset
+data_additional = {
+    'Symptoms': [
+        'Fever, Cough, Fatigue, Headache',
+        'Fatigue, Sore_Throat, Nausea'
+    ],
+    'Disease': ['Flu', 'Allergy']
+}
+
+df_additional = pd.DataFrame(data_additional)
+df_combined = pd.concat([df, df_additional], ignore_index=True)
+print("\nCombined DataFrame:\n", df_combined)
