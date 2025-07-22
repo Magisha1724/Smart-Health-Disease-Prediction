@@ -1,0 +1,25 @@
+import pandas as pd
+
+data = {
+    'Symptoms': [
+        'Fever, Cough, Fatigue, Headache, Muscle_Aches, Sore_Throat, Shortness_of_Breath, Nausea',
+        'Fever, Cough, Fatigue, Sore_Throat',
+        'Fever, Cough, Fatigue, Shortness_of_Breath',
+        'Cough, Sore_Throat',
+        'Fever, Cough, Headache, Muscle_Aches',
+        'Fatigue, Cough, Sore_Throat',
+        'Fever, Fatigue, Muscle_Aches, Nausea',
+        'Fatigue, Shortness_of_Breath',
+        'Fever, Cough, Fatigue, Nausea',
+        'Cough, Headache, Sore_Throat'
+    ],
+    'Disease': [
+        'Flu', 'Cold', 'COVID-19', 'Strep Throat',
+        'Allergy', 'Pneumonia', 'Bronchitis',
+        'Sinusitis', 'Viral Infection', 'Laryngitis'
+    ]
+}
+
+# Convert to DataFrame
+df = pd.DataFrame(data)
+print("\nInitial DataFrame:\n", df)
