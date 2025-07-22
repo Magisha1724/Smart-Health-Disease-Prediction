@@ -1,6 +1,0 @@
-# Check for missing values
-missing_values = df.isnull().sum()
-print("Missing Values:\n", missing_values)
-
-# Display cleaned DataFrame
-print("\nCleaned DataFrame:\n", df)
