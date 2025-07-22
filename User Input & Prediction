@@ -1,0 +1,4 @@
+def get_user_input():
+    print("Please enter your symptoms separated by commas (e.g., Fever, Cough):")
+    symptoms_input = input("Symptoms: ")
+    symptoms_list = [symptom.strip() for symptom in
